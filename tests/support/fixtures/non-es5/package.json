@@ -1,0 +1,11 @@
+{
+  "name": "are-you-es5-root-non-es5-test",
+  "version": "1.0.7",
+  "description": "A package to help you find out which of your `node_modules` aren't ES5 so you can add them to your transpilation steps.",
+  "repository": "https://github.com/obahareth/are-you-es5.git",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "debug": "4.3.1"
+  }
+}

@@ -15,6 +15,7 @@
     "acorn": "^6.0.6",
     "array-flatten": "^2.1.0",
     "commander": "^2.19.0",
+    "esbuild": "^0.8.33",
     "find-up": "^4.1.0"
   },
   "devDependencies": {

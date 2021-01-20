@@ -1,4 +1,5 @@
 import * as acorn from 'acorn'
+import { build } from 'esbuild'
 import flatten from 'array-flatten'
 import fs, { lstatSync } from 'fs'
 import path from 'path'
@@ -27,15 +28,15 @@ export class ModulesChecker {
     this.logger = new Logger(config)
   }
 
-  public checkModules(): IModuleCheckerResult {
+  public async checkModules(): Promise<IModuleCheckerResult> {
     return this.parseDeps()
   }
 
-  public parseDeps(): {
+  public async parseDeps(): Promise<{
     es5Modules: string[]
     es6Modules: string[]
     ignored: string[]
-  } {
+  }> {
     const dependencies = this.getDeps() || []
 
     const es5Modules: string[] = []
@@ -45,7 +46,7 @@ export class ModulesChecker {
     dependencies.forEach(dependency => {
       try {
         const dependencyIsEs5 = this.isScriptEs5(
-          require.resolve(dependency, { paths: [this.dir] }),
+          '',
           dependency
         )
         dependencyIsEs5
@@ -74,13 +75,11 @@ export class ModulesChecker {
     return [...new Set(deps)].sort()
   }
 
-  public isScriptEs5(scriptPath: string, dependencyName: string) {
-    // TODO: Check all scripts this script requires/imports
+  public isScriptEs5(sourceCode: string, dependencyName: string) {
     const acornOpts: acorn.Options = { ecmaVersion: 5 }
-    const code = fs.readFileSync(scriptPath, 'utf8')
 
     try {
-      acorn.parse(code, acornOpts)
+      acorn.parse(sourceCode, acornOpts)
     } catch (err) {
       this.logger.log(`❌ ${dependencyName} is not ES5`)
       return false

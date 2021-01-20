@@ -31,7 +31,7 @@ program
     '--silent',
     'Do not log messages in the console (except regex if --regex is used)'
   )
-  .action((path: string, cmd: any) => {
+  .action(async (path: string, cmd: any) => {
     const config: IModuleCheckerConfig = {
       checkAllNodeModules: cmd.all === true,
       ignoreBabelAndWebpackPackages: cmd.regexFiltering,
@@ -41,7 +41,7 @@ program
 
     const checker = new ModulesChecker(path, config)
     const logger = new Logger(config)
-    const { es6Modules } = checker.checkModules()
+    const { es6Modules } = await checker.checkModules()
 
     if (cmd.regex) {
       console.log('\n\nBabel-loader exclude regex:')
